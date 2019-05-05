@@ -19,6 +19,7 @@ jobs:
           command: |
             go fmt ./...
             go vet ./...
+      - add_ssh_keys
       - run:
           name: cross compile
           command: |

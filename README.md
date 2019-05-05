@@ -20,3 +20,14 @@ export SECRET_NAME="supersecret"
 
 ./keyvault-get-secret
 ```
+
+## Release
+
+The release script uses `gox` for fast parralel cross compiling of the binaries. Install `gox` if it itn't available on your system yet.
+```
+$ go get -u github.com/mitchellh/gox
+```
+
+```
+./release.sh
+```

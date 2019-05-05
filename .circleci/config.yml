@@ -19,10 +19,12 @@ jobs:
             dep ensure
       - run:
           name: Fmt
-          command: go fmt ./...
+          command: | 
+            go fmt ./...
       - run:
           name: Vet
-          command: go vet ./...            
+          command: | 
+            go vet ./...            
       - add_ssh_keys
       - run:
           name: cross compile, only on version bump

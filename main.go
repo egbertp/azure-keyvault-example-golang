@@ -14,6 +14,11 @@ import (
 	"github.com/caarlos0/env"
 )
 
+var (
+	CommitHash string
+	Version    string
+)
+
 type Config struct {
 	ClientID     string `env:"AZURE_CLIENT_ID,required"`
 	ClientSecret string `env:"AZURE_CLIENT_SECRET,required"`
@@ -39,6 +44,7 @@ type Client struct {
 }
 
 func main() {
+	fmt.Printf("Starting keyvault-get-secret \t\tversion: %s, \t\tcommit hash: %s\n\n", Version, CommitHash)
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		log.Fatalln(err)

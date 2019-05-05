@@ -19,6 +19,10 @@ export VAULT_BASE_URL="https://example.vault.azure.net/"
 export SECRET_NAME="supersecret"
 
 ./keyvault-get-secret
+
+2019/05/05 13:36:01 Authorization: 		Bearer ey(....)xA
+
+2019/05/05 13:36:02 Secret value is:    I feel the need - the need for speed!
 ```
 
 ## Release

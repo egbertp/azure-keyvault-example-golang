@@ -6,37 +6,39 @@ jobs:
     working_directory: /go/src/github.com/egbertp/azure-keyvault-example-golang
     steps:
       - checkout
-      - run: go get -u github.com/golang/dep/cmd/dep
-      - run: go get -u github.com/mitchellh/gox
-      - run: go get -u github.com/tcnksm/ghr
-      - run: go get -u github.com/stevenmatthewt/semantics
+      - run:
+          name: Install build dependencies
+          coommand: |
+            go get -u github.com/golang/dep/cmd/dep
+            go get -u github.com/mitchellh/gox
+            go get -u github.com/tcnksm/ghr
+            go get -u github.com/stevenmatthewt/semantics      
       - run:
           name: install dependencies
           command: |
             dep ensure
       - run:
-          name: run tests
-          command: |
-            go fmt ./...
-            go vet ./...
-      - add_ssh_keys
+          name: Fmt
+          command: go fmt ./...
       - run:
-          name: create git tag that complies with semantic versioning
-          command: |
-            COMMIT_HASH=`git rev-parse --short=8 HEAD 2>/dev/null`
-            TAG=`semantics --output-tag`
-            GIT_DESCRIBE=`git describe --tags`
-            echo "Tag variable holds value $TAG"
-            echo "Tag variable holds value $GIT_DESCRIBE"
+          name: Vet
+          command: go vet ./...            
+      - add_ssh_keys
       - run:
           name: cross compile, only on version bump
           command: |
-            if [ -z "$TAG" ]; then
-              echo "The commit message(s) did not indicate a major/minor/patch version."
-            else
-              echo "About to compile binaries"
+            TAG=`semantics --output-tag`
+            GIT_DESCRIBE=`git describe --tags`
+            COMMIT_HASH=`git rev-parse --short=8 HEAD 2>/dev/null`
+            echo "Tag variable holds value $TAG"
+            echo "Tag variable holds value $GIT_DESCRIBE"
+            echo "COMMIT_HASH variable holds value $COMMIT_HASH"
+            if [ "$TAG" ]; then
+              echo "Compiling binaries"
               gox -ldflags "-X main.Version=$TAG -X main.CommitHash=$COMMIT_HASH" -os="linux darwin windows openbsd" -arch="amd64" -output="dist/keyvault-get-secret_{{.OS}}_{{.Arch}}"
               ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $TAG dist/
+            else
+              echo "The commit message(s) did not indicate a major/minor/patch version."
             fi
 workflows:
   version: 2

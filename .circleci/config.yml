@@ -21,18 +21,21 @@ jobs:
             go vet ./...
       - add_ssh_keys
       - run:
-          name: cross compile
+          name: create git tag that complies with semantic versioning
           command: |
             COMMIT_HASH=`git rev-parse --short=8 HEAD 2>/dev/null`
-            GIT_DESCRIBE=`git describe --tags`
             TAG=`semantics --output-tag`
+            GIT_DESCRIBE=`git describe --tags`
             echo "Tag variable holds value $TAG"
             echo "Tag variable holds value $GIT_DESCRIBE"
+      - run:
+          name: cross compile, only on version bump
+          command: |
             if [ -z "$TAG" ]; then
               echo "The commit message(s) did not indicate a major/minor/patch version."
             else
               echo "About to compile binaries"
-              gox -ldflags "-X main.Version=$TAG -X main.CommitHash=$COMMIT_HASH" -os="linux darwin windows openbsd" -arch="amd64" -output="dist/keyvault-get-secret_{{.OS}}_{{.Arch}}"  
+              gox -ldflags "-X main.Version=$TAG -X main.CommitHash=$COMMIT_HASH" -os="linux darwin windows openbsd" -arch="amd64" -output="dist/keyvault-get-secret_{{.OS}}_{{.Arch}}"
               ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $TAG dist/
             fi
 workflows:

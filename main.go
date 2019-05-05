@@ -44,7 +44,7 @@ type Client struct {
 }
 
 func main() {
-	fmt.Printf("Starting keyvault-get-secret \t\tversion: %s, \t\tcommit hash: %s\n\n", Version, CommitHash)
+	fmt.Printf("Starting keyvault-get-secret version: %s, commit hash: %s\n\n", Version, CommitHash)
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		log.Fatalln(err)

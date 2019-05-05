@@ -22,7 +22,7 @@ export SECRET_NAME="supersecret"
 
 2019/05/05 13:36:01 Authorization: 		Bearer ey(....)xA
 
-2019/05/05 13:36:02 Secret value is:    I feel the need - the need for speed!
+2019/05/05 13:36:02 Secret value is:        I feel the need - the need for speed!
 ```
 
 ## Release
